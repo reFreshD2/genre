@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Feature
 {
+    const QUALITATIVE = 0;
+    const QUANTITATIVE = 1;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -31,6 +34,11 @@ class Feature
      * @ORM\Column(type="text", nullable=true)
      */
     private $possibleValue;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $alias;
 
     public function getId(): ?int
     {
@@ -69,6 +77,18 @@ class Feature
     public function setPossibleValue(?string $possibleValue): self
     {
         $this->possibleValue = $possibleValue;
+
+        return $this;
+    }
+
+    public function getAlias(): ?string
+    {
+        return $this->alias;
+    }
+
+    public function setAlias(string $alias): self
+    {
+        $this->alias = $alias;
 
         return $this;
     }

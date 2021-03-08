@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактирование жанра{% endblock %}
+
+{% block body %}
+    <h1>Редактирование жанра</h1>
+
+    {{ include('genre/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('genre_index') }}">назад к редактору</a>
+
+    {{ include('genre/_delete_form.html.twig') }}
+{% endblock %}

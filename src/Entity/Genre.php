@@ -39,6 +39,11 @@ class Genre
      */
     private $valuesOfFeatures;
 
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $alias;
+
     public function __construct()
     {
         $this->features = new ArrayCollection();
@@ -124,6 +129,18 @@ class Genre
                 $valuesOfFeature->setGenre(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAlias(): ?string
+    {
+        return $this->alias;
+    }
+
+    public function setAlias(string $alias): self
+    {
+        $this->alias = $alias;
 
         return $this;
     }

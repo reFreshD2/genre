@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <ol>
+        <li>
+            <a href="{{ path('genre_index') }}">Редактор жанров</a>
+        </li>
+        <li>
+            <a href="{{ path('feature_index' )}}">Редактор признаков</a>
+        </li>
+    </ol>
+{% endblock %}
