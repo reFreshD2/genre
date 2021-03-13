@@ -31,14 +31,14 @@ class Feature
     private $type;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $possibleValue;
-
-    /**
      * @ORM\Column(type="string", length=100)
      */
     private $alias;
+
+    /**
+     * @ORM\OneToOne(targetEntity=PossibleValue::class, mappedBy="feature", cascade={"persist", "remove"})
+     */
+    private $possibleValue;
 
     public function getId(): ?int
     {
@@ -69,18 +69,6 @@ class Feature
         return $this;
     }
 
-    public function getPossibleValue(): ?string
-    {
-        return $this->possibleValue;
-    }
-
-    public function setPossibleValue(?string $possibleValue): self
-    {
-        $this->possibleValue = $possibleValue;
-
-        return $this;
-    }
-
     public function getAlias(): ?string
     {
         return $this->alias;
@@ -91,5 +79,32 @@ class Feature
         $this->alias = $alias;
 
         return $this;
+    }
+
+    public function getPossibleValue(): ?PossibleValue
+    {
+        return $this->possibleValue;
+    }
+
+    public function setPossibleValue(?PossibleValue $possibleValue): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($possibleValue === null && $this->possibleValue !== null) {
+            $this->possibleValue->setFeature(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($possibleValue !== null && $possibleValue->getFeature() !== $this) {
+            $possibleValue->setFeature($this);
+        }
+
+        $this->possibleValue = $possibleValue;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 }

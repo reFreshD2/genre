@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактор возможных значений{% endblock %}
+
+{% block body %}
+    <h1>Добавление возможного значения признака</h1>
+
+    <div style="font-family: 'Times New Roman', Times, serif; font-size: 75%; font-style: italic; margin: 0.5%">
+        Примечание: <br>
+        Качественные признаки вводить через запятую по формату: "Возможное значение 1,Возможное значение 2,...,Возможное Значение N"<br>
+        Количественные признаки вводить по формату: "[Начальное значение - Конечное значение]" <br>
+    </div>
+
+    {{ include('possible_value/_form.html.twig') }}
+
+    <a href="{{ path('possible_value_index') }}">Назад к редактору</a>
+{% endblock %}

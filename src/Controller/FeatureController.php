@@ -59,6 +59,7 @@ class FeatureController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $feature->setType($request->request->get('feature')['type']);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('feature_index');
