@@ -1,17 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Редактор жанров{% endblock %}
+{% block title %}Р РµРґР°РєС‚РѕСЂ Р¶Р°РЅСЂРѕРІ{% endblock %}
 
 {% block body %}
-    <h1>Редактор жанров</h1>
+    <h1>Р РµРґР°РєС‚РѕСЂ Р¶Р°РЅСЂРѕРІ</h1>
 
     <table class="table" border="2">
         <thead>
             <tr>
-                <th>Название жанра</th>
-                <th>Дата редактирования</th>
-                <th>Alias для форм</th>
-                <th>Действия</th>
+                <th>РќР°Р·РІР°РЅРёРµ Р¶Р°РЅСЂР°</th>
+                <th>Р”Р°С‚Р° СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ</th>
+                <th>Alias РґР»СЏ С„РѕСЂРј</th>
+                <th>Р”РµР№СЃС‚РІРёСЏ</th>
             </tr>
         </thead>
         <tbody>
@@ -21,17 +21,17 @@
                 <td>{{ genre.changeAt ? genre.changeAt|date('Y-m-d') : '' }}</td>
                 <td>{{ genre.alias }}</td>
                 <td>
-                    <a href="{{ path('genre_edit', {'id': genre.id}) }}">Редактировать</a>
+                    <a href="{{ path('genre_edit', {'id': genre.id}) }}">Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">Нет записей</td>
+                <td colspan="5">РќРµС‚ Р·Р°РїРёСЃРµР№</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('genre_new') }}">Добавить запись</a>
-    <a href="{{ path('admin') }}">Вернуться назад</a>
+    <a href="{{ path('genre_new') }}">Р”РѕР±Р°РІРёС‚СЊ Р·Р°РїРёСЃСЊ</a>
+    <a href="{{ path('admin') }}">Р’РµСЂРЅСѓС‚СЊСЃСЏ РЅР°Р·Р°Рґ</a>
 {% endblock %}

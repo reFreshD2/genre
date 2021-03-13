@@ -14,9 +14,9 @@ class FeatureType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class, ['label' => 'Название признака'])
+            ->add('name', TextType::class, ['label' => 'РќР°Р·РІР°РЅРёРµ РїСЂРёР·РЅР°РєР°'])
             ->add('type', ChoiceType::class, [
-                'label' => 'Тип признака',
+                'label' => 'РўРёРї РїСЂРёР·РЅР°РєР°Р°',
                 'choices' => [
                     0 => false,
                     1 => false
@@ -25,10 +25,10 @@ class FeatureType extends AbstractType
                     $label = '';
                     switch ($key) {
                         case Feature::QUALITATIVE:
-                            $label = 'Качественный признак';
+                            $label = 'РљР°С‡РµСЃС‚РІРµРЅРЅС‹Р№ РїСЂРёР·РЅР°Рє';
                             break;
                         case Feature::QUANTITATIVE:
-                            $label = 'Количественный признак';
+                            $label = 'РљРѕР»РёС‡РµСЃС‚РІРµРЅРЅС‹Р№ РїСЂРёР·РЅР°Рє';
                             break;
                     }
                     return $label;
@@ -36,7 +36,7 @@ class FeatureType extends AbstractType
                 'expanded' => true,
                 'multiple' => false
             ])
-            ->add('alias', TextType::class, ['label' => 'Alias для формы']);
+            ->add('alias', TextType::class, ['label' => 'Alias РґР»СЏ С„РѕСЂРјС‹']);
     }
 
     public function configureOptions(OptionsResolver $resolver)

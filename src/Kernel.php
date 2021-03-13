@@ -35,9 +35,4 @@ class Kernel extends BaseKernel
             (require $path)($routes->withPath($path), $this);
         }
     }
-
-    public function getCharset()
-    {
-        return 'windows-1251';
-    }
 }

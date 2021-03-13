@@ -1,17 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Редактор признаков{% endblock %}
+{% block title %}Р РµРґР°РєС‚РѕСЂ РїСЂРёР·РЅР°РєРѕРІ{% endblock %}
 
 {% block body %}
-    <h1>Редактор признаков</h1>
+    <h1>Р РµРґР°РєС‚РѕСЂ РїСЂРёР·РЅР°РєРѕРІ</h1>
 
     <table class="table" border="2">
         <thead>
         <tr>
-            <th>Название признака</th>
-            <th>Тип</th>
-            <th>Alias для форм</th>
-            <th>Действия</th>
+            <th>РќР°Р·РІР°РЅРёРµ Р¶Р°РЅСЂР°</th>
+            <th>РўРёРї</th>
+            <th>Alias РґР»СЏ С„РѕСЂРј</th>
+            <th>Р”РµР№СЃС‚РІРёСЏ</th>
         </tr>
         </thead>
         <tbody>
@@ -20,26 +20,26 @@
                 <td>{{ feature.name }}</td>
                 <td>
                     {% if feature.type == 0 %}
-                        Качественный признак
+                        РљР°С‡РµСЃС‚РІРµРЅРЅС‹Р№ РїСЂРёР·РЅР°Рє
                     {% elseif feature.type == 1 %}
-                        Количественный признак
+                        РљРѕР»РёС‡РµСЃС‚РІРµРЅРЅС‹Р№ РїСЂРёР·РЅР°Рє
                     {% else %}
-                        Отсутствует указание типа признака
+                        РўРёРї РїСЂРёР·РЅР°РєР° РЅРµ СѓРєР°Р·Р°РЅ
                     {% endif %}
                 </td>
                 <td>{{ feature.alias }}</td>
                 <td>
-                    <a href="{{ path('feature_edit', {'id': feature.id}) }}">Редактировать</a>
+                    <a href="{{ path('feature_edit', {'id': feature.id}) }}">Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">Нет записей</td>
+                <td colspan="6">РќРµС‚ Р·Р°РїРёСЃРµР№</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('feature_new') }}">Добавить запись</a>
-    <a href="{{ path('admin') }}">Вернуться назад</a>
+    <a href="{{ path('feature_new') }}">Р”РѕР±Р°РІРёС‚СЊ Р·Р°РїРёСЃСЊ</a>
+    <a href="{{ path('admin') }}">Р’РµСЂРЅСѓС‚СЊСЃСЏ РЅР°Р·Р°Рґ</a>
 {% endblock %}

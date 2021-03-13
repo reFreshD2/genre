@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Редактирование признака{% endblock %}
+{% block title %}Р РµРґР°РєС‚РѕСЂ РїСЂРёР·РЅР°РєРѕРІ{% endblock %}
 
 {% block body %}
-    <h1>Редактирование признака</h1>
+    <h1>Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РїСЂРёР·РЅР°РєР°</h1>
 
-    {{ include('feature/_form.html.twig', {'button_label': 'Обновить'}) }}
+    {{ include('feature/_form.html.twig', {'button_label': 'РћР±РЅРѕРІРёС‚СЊ'}) }}
 
-    <a href="{{ path('feature_index') }}">назад к редактору</a>
+    <a href="{{ path('feature_index') }}">РќР°Р·Р°Рґ Рє СЂРµРґР°РєС‚РѕСЂСѓ</a>
 
     {{ include('feature/_delete_form.html.twig') }}
 {% endblock %}

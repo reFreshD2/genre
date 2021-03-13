@@ -13,8 +13,8 @@ class GenreType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class, ['label' => 'Название жанра'])
-            ->add('alias', TextType::class, ['label' => 'Alias для формы'])
+            ->add('name', TextType::class, ['label' => 'РќР°Р·РІР°РЅРёРµ Р¶Р°РЅСЂР°'])
+            ->add('alias', TextType::class, ['label' => 'Alias РґР»СЏ С„РѕСЂРјС‹'])
         ;
     }
 
