@@ -56,7 +56,14 @@ class ValueOfFeature
 
     public function setValue(string $value): self
     {
-        $this->value = $value;
+        $matches = [];
+        $result = [];
+        if (preg_match('/^([ёа-яЁА-Я]+,|[а-яА-Я]+)+$/u', $value)) {
+            $result = explode(',', $value);
+        } elseif (preg_match('/^\[(\d+)-(\d+)\]$/', $value, $matches)) {
+            $result = [$matches[1], $matches[2]];
+        }
+        $this->value = \json_encode($result);
 
         return $this;
     }

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактор значения признака для жанра{% endblock %}
+
+{% block body %}
+    <h1>Редактирование значения признака "{{ value_of_feature.feature }}" для жанра "{{ value_of_feature.genre }}"</h1>
+
+    {{ include('value_of_feature/_form.html.twig', {'button_label': 'Обновить'}) }}
+
+    <a href="{{ path('value_of_feature_index') }}">Назад к редактору</a>
+{% endblock %}

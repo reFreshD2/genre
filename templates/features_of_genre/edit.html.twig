@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактор признаков жанров{% endblock %}
+
+{% block body %}
+    <h1>Редактирование признаков жанров</h1>
+
+    <div style="font-style: italic; margin: 0.5%">
+        Выбирите признаки класса
+    </div>
+
+    {{ include('features_of_genre/_form.html.twig', {'button_label': 'Обновить'}) }}
+
+    <a href="{{ path('features_of_genre_index') }}">Назад к редактору</a>
+{% endblock %}

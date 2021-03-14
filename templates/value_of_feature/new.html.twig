@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактор значений признаков для жанра{% endblock %}
+
+{% block body %}
+    <h1>Добавление значения признака "{{ value_of_feature.feature }}" для жанра "{{ value_of_feature.genre }}"</h1>
+
+    <div style="font-family: 'Times New Roman', Times, serif; font-size: 75%; font-style: italic; margin: 0.5%">
+        Примечание: <br>
+        Качественные признаки вводить через запятую по формату: "Значение 1,Значение 2,...,Значение N"<br>
+        Количественные признаки вводить по формату: "[Начальное значение - Конечное значение]" <br>
+    </div>
+
+    {{ include('value_of_feature/_form.html.twig') }}
+
+    <a href="{{ path('value_of_feature_index') }}">Назад к редактору</a>
+{% endblock %}

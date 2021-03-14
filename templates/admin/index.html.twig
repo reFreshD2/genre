@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Админка{% endblock %}
+
 {% block body %}
     <ol>
         <li>
@@ -10,6 +12,12 @@
         </li>
         <li>
             <a href="{{ path('possible_value_index' )}}">Редактор возможных значений</a>
+        </li>
+        <li>
+            <a href="{{ path('features_of_genre_index' )}}">Редактор признаков жанров</a>
+        </li>
+        <li>
+            <a href="{{ path('value_of_feature_index' )}}">Редактор значений признаков для жанров</a>
         </li>
     </ol>
 {% endblock %}

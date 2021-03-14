@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактор признаков жанров{% endblock %}
+
+{% block body %}
+    <h1>Редактор признаков жанров</h1>
+
+    <table class="table" border="2">
+        <thead>
+        <tr>
+            <th>Название жанра</th>
+            <th>Признаки жанра</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for genre in genres %}
+            <tr>
+                <td>{{ genre.name }}</td>
+                <td> {% for feature in genre.features %}
+                        {{ feature }} <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{{ path('features_of_genre_edit', {'id': genre.id}) }}">Редактировать</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Нет записей</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('admin') }}">Вернуться назад</a>
+{% endblock %}
