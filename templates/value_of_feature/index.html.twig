@@ -17,6 +17,7 @@
         <tbody>
         {% for genre in genres %}
             {% for feature in genre.features %}
+                {% set empty = true %}
                 <tr>
                     <td>{{ genre }}</td>
                     <td>{{ feature }}</td>
@@ -28,8 +29,10 @@
                             <td>
                                 <a href="{{ path('value_of_feature_edit', {'id': value.id}) }}">Редактировать</a>
                             </td>
+                            {% set empty = false %}
                         {% endif %}
-                    {% else %}
+                    {% endfor %}
+                    {% if empty %}
                         <td>
                             Нет значения
                         </td>
@@ -37,7 +40,7 @@
                             <a href="{{ path('value_of_feature_new', {'genre': genre, 'feature': feature}) }}">Добавить
                                 запись</a>
                         </td>
-                    {% endfor %}
+                    {% endif %}
                 </tr>
             {% else %}
                 <tr>

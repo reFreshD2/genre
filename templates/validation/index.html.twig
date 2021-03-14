@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Проверка целостности знаний{% endblock %}
+
+{% block body %}
+    <h1>Проверка целостности знаний</h1>
+
+    <table class="table" border="2">
+        <thead>
+        <tr>
+            <th>Проблема</th>
+            <th>Решение</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for error in report %}
+            <tr>
+                <td>{{ error[0] }}</td>
+                <td>
+                    <a href="{{ error[1] }}">Решить</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Проблем не обнаружено</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('admin') }}">Вернуться назад</a>
+{% endblock %}
