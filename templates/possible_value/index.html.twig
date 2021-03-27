@@ -7,19 +7,23 @@
 
     <table class="table" border="2">
         <thead>
-            <tr>
-                <th>Название признака</th>
-                <th>Возможное значение</th>
-                <th>Действия</th>
-            </tr>
+        <tr>
+            <th>Название признака</th>
+            <th>Возможное значение</th>
+            <th>Действия</th>
+        </tr>
         </thead>
         <tbody>
-        {% for possible_value in possible_values %}
+        {% for feature in features %}
             <tr>
-                <td>{{ possible_value.feature }}</td>
-                <td>{{ possible_value.value }}</td>
+                <td>{{ feature }}</td>
+                <td>{{ feature.possibleValue }}</td>
                 <td>
-                    <a href="{{ path('possible_value_edit', {'id': possible_value.id}) }}">Редактировать</a>
+                    {% if feature.possibleValue is null %}
+                        <a href="{{ path('possible_value_new', {'feature_id': feature.id}) }}">Добавить</a>
+                    {% else %}
+                        <a href="{{ path('possible_value_edit', {'id': feature.possibleValue.id}) }}">Редактировать</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
@@ -30,6 +34,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('possible_value_new') }}">Добавить запись</a>
     <a href="{{ path('admin') }}">Вернуться назад</a>
 {% endblock %}

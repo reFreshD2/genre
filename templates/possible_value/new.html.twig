@@ -5,13 +5,31 @@
 {% block body %}
     <h1>Добавление возможного значения признака</h1>
 
-    <div style="font-family: 'Times New Roman', Times, serif; font-size: 75%; font-style: italic; margin: 0.5%">
-        Примечание: <br>
-        Качественные признаки вводить через запятую по формату: "Возможное значение 1,Возможное значение 2,...,Возможное Значение N"<br>
-        Количественные признаки вводить по формату: "[Начальное значение - Конечное значение]" <br>
-    </div>
-
-    {{ include('possible_value/_form.html.twig') }}
+    <form action="{{ path('possible_value_new', {'feature_id': feature.id}) }}" method="post">
+        <label> Признак
+            <input type="text" value="{{ feature }}" disabled>
+        </label> <br>
+        {% if feature.type == 0 %}
+            <label> Тип признака
+                <input type="text" value="Качественный признак" disabled>
+            </label> <br>
+            <label> Значение качественного признака <br>
+                <input type="text" class="value" name="values[]">
+                <input type="button" id="add" value="+">
+            </label> <br>
+        {% else %}
+            <label> Тип признака
+                <input type="text" value="Количественный признак" disabled>
+            </label> <br>
+            <label> Значение количественного признака
+                <input type="number" min="0" name="min">
+                <input type="number" min="0" name="max">
+            </label> <br>
+        {% endif %}
+        <input hidden name="submit">
+        <input type="submit" value="Сохранить">
+    </form>
 
     <a href="{{ path('possible_value_index') }}">Назад к редактору</a>
+    <script src="/assets/js/possibleValue.js"></script>
 {% endblock %}

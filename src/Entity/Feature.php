@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Feature
 {
-    const QUALITATIVE = 0;
-    const QUANTITATIVE = 1;
+    public const QUALITATIVE = 0;
+    public const QUANTITATIVE = 1;
 
     /**
      * @ORM\Id

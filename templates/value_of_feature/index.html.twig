@@ -42,11 +42,11 @@
                         </td>
                     {% endif %}
                 </tr>
-            {% else %}
-                <tr>
-                    <td colspan="3">Нет записей</td>
-                </tr>
             {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="3">Нет записей</td>
+            </tr>
         {% endfor %}
         </tbody>
     </table>

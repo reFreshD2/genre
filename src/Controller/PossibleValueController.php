@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\PossibleValue;
+use App\Entity\Feature;
 use App\Form\PossibleValueType;
-use App\Repository\PossibleValueRepository;
+use App\Repository\FeatureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,23 +19,31 @@ class PossibleValueController extends AbstractController
     /**
      * @Route("/", name="possible_value_index", methods={"GET"})
      */
-    public function index(PossibleValueRepository $possibleValueRepository): Response
+    public function index(FeatureRepository $featureRepository): Response
     {
         return $this->render('possible_value/index.html.twig', [
-            'possible_values' => $possibleValueRepository->findAll(),
+            'features' => $featureRepository->findAll(),
         ]);
     }
 
     /**
-     * @Route("/new", name="possible_value_new", methods={"GET","POST"})
+     * @Route("/new/{feature_id}", name="possible_value_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, FeatureRepository $featureRepository): Response
     {
+        $feature = $featureRepository->findOneBy(['id' => $request->attributes->get('feature_id')]);
         $possibleValue = new PossibleValue();
-        $form = $this->createForm(PossibleValueType::class, $possibleValue);
-        $form->handleRequest($request);
+        $possibleValue->setFeature($feature);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($request->request->has('submit')) {
+            if ($feature->getType() === Feature::QUALITATIVE) {
+                $values = $request->request->get('values');
+                $possibleValue->setValue(implode(',', $values));
+            } else {
+                $min = min($request->request->get('min'), $request->request->get('max'));
+                $max = max($request->request->get('min'), $request->request->get('max'));
+                $possibleValue->setValue("[$min-$max]");
+            }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($possibleValue);
             $entityManager->flush();
@@ -44,7 +53,7 @@ class PossibleValueController extends AbstractController
 
         return $this->render('possible_value/new.html.twig', [
             'possible_value' => $possibleValue,
-            'form' => $form->createView(),
+            'feature' => $feature
         ]);
     }
 
