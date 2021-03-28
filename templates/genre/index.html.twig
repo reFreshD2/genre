@@ -9,7 +9,6 @@
         <thead>
             <tr>
                 <th>Название жанра</th>
-                <th>Дата редактирования</th>
                 <th>Alias для форм</th>
                 <th>Действия</th>
             </tr>
@@ -18,7 +17,6 @@
         {% for genre in genres %}
             <tr>
                 <td>{{ genre.name }}</td>
-                <td>{{ genre.changeAt ? genre.changeAt|date('Y-m-d') : '' }}</td>
                 <td>{{ genre.alias }}</td>
                 <td>
                     <a href="{{ path('genre_edit', {'id': genre.id}) }}">Редактировать</a>

@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Feature;
 use App\Repository\FeatureRepository;
 use App\Repository\GenreRepository;
 use App\Repository\PossibleValueRepository;
+use App\Repository\ValueOfFeatureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,16 +16,19 @@ class ValidationController extends AbstractController
     private $genreRepository;
     private $featureRepository;
     private $possibleValueRepository;
+    private $valueOfFeatureRepository;
 
     public function __construct(
         GenreRepository $genreRepository,
         FeatureRepository $featureRepository,
-        PossibleValueRepository $possibleValueRepository
+        PossibleValueRepository $possibleValueRepository,
+        ValueOfFeatureRepository $valueOfFeatureRepository
     )
     {
         $this->genreRepository = $genreRepository;
         $this->featureRepository = $featureRepository;
         $this->possibleValueRepository = $possibleValueRepository;
+        $this->valueOfFeatureRepository = $valueOfFeatureRepository;
     }
 
     /**
@@ -40,7 +45,7 @@ class ValidationController extends AbstractController
     {
         $report = [];
         foreach ($this->genreRepository->findAll() as $genre) {
-            if (empty($genre->getFeatures())) {
+            if ($genre->getFeatures()->isEmpty()) {
                 $report[$genre->getName()] = [
                     "У жанра \"$genre\" отсутствуют признаки",
                     $this->generateUrl('features_of_genre_edit', ['id' => $genre->getId()])
@@ -68,6 +73,29 @@ class ValidationController extends AbstractController
                 $report[$feature->getName()] = [
                     "У признака \"$feature\" возможное значение имеет пустое значение",
                     $this->generateUrl('possible_value_edit', ['id' => $possibleValue->getId()])
+                ];
+            }
+        }
+        foreach ($this->valueOfFeatureRepository->findAll() as $valueOfFeature) {
+            $value = \json_decode($valueOfFeature->getValue(), true);
+            $feature = $valueOfFeature->getFeature();
+            $genre = $valueOfFeature->getGenre();
+            if (empty($value)) {
+                $report[$feature->getName()] = [
+                    "Признак \"$feature\" для жанра \"$genre\" имеет пустое значение",
+                    $this->generateUrl('value_of_feature_edit', ['id' => $valueOfFeature->getId()])
+                ];
+                break;
+            }
+            $possibleValue = \json_decode($valueOfFeature->getFeature()->getPossibleValue()->getValue(), true);
+            if (
+                $valueOfFeature->getFeature()->getType() === Feature::QUANTITATIVE
+                && ($value[0] < $possibleValue[0] || $value[1] > $possibleValue[1])
+            ) {
+                $report[$feature->getName()] = [
+                    "Значение признака \"$feature\" для жанра \"$genre\" должно соответствовать возможным значениям." .
+                    "Получено [$value[0]-$value[1]] : Необходимо [$possibleValue[0]-$possibleValue[1]].",
+                    $this->generateUrl('value_of_feature_edit', ['id' => $valueOfFeature->getId()])
                 ];
             }
         }
