@@ -14,16 +14,18 @@
                 <input type="text" value="Качественный признак" disabled>
             </label> <br>
             <label> Значение качественного признака <br>
-                <input type="text" class="value" name="values[]">
+                <input type="text" class="value" name="values[]" required>
                 <input type="button" id="add" value="+">
             </label> <br>
         {% else %}
             <label> Тип признака
                 <input type="text" value="Количественный признак" disabled>
             </label> <br>
-            <label> Значение количественного признака
-                <input type="number" min="0" name="min">
-                <input type="number" min="0" name="max">
+            <label> Значение количественного признака [
+                <input type="number" min="0" name="min" required>
+                -
+                <input type="number" min="0" name="max" required>
+                ]
             </label> <br>
         {% endif %}
         <input hidden name="submit">

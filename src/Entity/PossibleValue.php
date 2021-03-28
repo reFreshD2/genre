@@ -58,7 +58,7 @@ class PossibleValue
         } elseif ($value) {
             $result = explode(',', $value);
         }
-        $this->value = \json_encode($result);
+        $this->value = \json_encode($result, JSON_UNESCAPED_UNICODE);
 
         return $this;
     }

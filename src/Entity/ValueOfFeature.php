@@ -58,12 +58,12 @@ class ValueOfFeature
     {
         $matches = [];
         $result = [];
-        if (preg_match('/^([ёа-яЁА-Я]+,|[а-яА-Я]+)+$/u', $value)) {
-            $result = explode(',', $value);
-        } elseif (preg_match('/^\[(\d+)-(\d+)\]$/', $value, $matches)) {
+        if (preg_match('/^\[(\d+)-(\d+)\]$/', $value, $matches)) {
             $result = [$matches[1], $matches[2]];
+        } elseif ($value) {
+            $result = explode(',', $value);
         }
-        $this->value = \json_encode($result);
+        $this->value = \json_encode($result, JSON_UNESCAPED_UNICODE);
 
         return $this;
     }

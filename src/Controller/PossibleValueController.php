@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\PossibleValue;
 use App\Entity\Feature;
-use App\Form\PossibleValueType;
 use App\Repository\FeatureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,10 +61,15 @@ class PossibleValueController extends AbstractController
      */
     public function edit(Request $request, PossibleValue $possibleValue): Response
     {
-        $form = $this->createForm(PossibleValueType::class, $possibleValue);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($request->request->has('submit')) {
+            if ($possibleValue->getFeature()->getType() === Feature::QUALITATIVE) {
+                $values = $request->request->get('values');
+                $possibleValue->setValue(implode(',', $values));
+            } else {
+                $min = min($request->request->get('min'), $request->request->get('max'));
+                $max = max($request->request->get('min'), $request->request->get('max'));
+                $possibleValue->setValue("[$min-$max]");
+            }
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('possible_value_index');
@@ -73,7 +77,7 @@ class PossibleValueController extends AbstractController
 
         return $this->render('possible_value/edit.html.twig', [
             'possible_value' => $possibleValue,
-            'form' => $form->createView(),
+            'values' => json_decode($possibleValue->getValue(), true)
         ]);
     }
 

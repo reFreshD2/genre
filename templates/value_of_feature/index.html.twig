@@ -5,51 +5,39 @@
 {% block body %}
     <h1>Редактор значений признаков для жанров</h1>
 
-    <table class="table" border="2">
-        <thead>
-        <tr>
-            <th>Жанр</th>
-            <th>Признак</th>
-            <th>Значение признака</th>
-            <th>Действия</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for genre in genres %}
-            {% for feature in genre.features %}
-                {% set empty = true %}
-                <tr>
-                    <td>{{ genre }}</td>
-                    <td>{{ feature }}</td>
-                    {% for value in valueOfFeature %}
-                        {% if value.genre == genre and value.feature == feature %}
-                            <td>
-                                {{ value.value }}
-                            </td>
-                            <td>
-                                <a href="{{ path('value_of_feature_edit', {'id': value.id}) }}">Редактировать</a>
-                            </td>
-                            {% set empty = false %}
+    {% if genre %}
+        <form action="{{ path('value_of_feature_index') }}" method="post">
+            <label> Жанр
+                <select name="select" required>
+                    <option value="{{ genre.id }}"> {{ genre }}</option>
+                    {% for otherGenre in genres %}
+                        {% if otherGenre != genre %}
+                            <option value="{{ otherGenre.id }}">{{ otherGenre }}</option>
                         {% endif %}
                     {% endfor %}
-                    {% if empty %}
-                        <td>
-                            Нет значения
-                        </td>
-                        <td>
-                            <a href="{{ path('value_of_feature_new', {'genre': genre, 'feature': feature}) }}">Добавить
-                                запись</a>
-                        </td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-        {% else %}
-            <tr>
-                <td colspan="3">Нет записей</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                </select>
+            </label>
+            <input type="hidden" name="submit">
+            <input type="submit" value="Выбрать">
+        </form>
+
+        {% include 'value_of_feature/table.html.twig' with {
+            genre: genre,
+            valueOfFeature: valueOfFeature
+        } %}
+    {% else %}
+        <form action="{{ path('value_of_feature_index') }}" method="post">
+            <label> Жанр
+                <select name="select" required>
+                    {% for otherGenre in genres %}
+                        <option value="{{ otherGenre.id }}">{{ otherGenre }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <input type="hidden" name="submit">
+            <input type="submit" value="Выбрать">
+        </form>
+    {% endif %}
 
     <a href="{{ path('admin') }}">Вернуться назад</a>
 {% endblock %}

@@ -5,7 +5,49 @@
 {% block body %}
     <h1>Редактирование значения признака "{{ value_of_feature.feature }}" для жанра "{{ value_of_feature.genre }}"</h1>
 
-    {{ include('value_of_feature/_form.html.twig', {'button_label': 'Обновить'}) }}
+    <form action="{{ path('value_of_feature_edit', {'id': value_of_feature.id}) }}" method="post">
+        {% if value_of_feature.feature.type == 0 %}
+            <label> Тип признака
+                <input type="text" value="Качественный признак" disabled>
+            </label> <br>
+            <label> Значение качественного признака <br>
+                {% for value in possible_values %}
+                    {% if value in values %}
+                        <input type="checkbox" class="value" name="values[]" value="{{ value }}" checked> {{ value }}
+                        <br>
+                    {% else %}
+                        <input type="checkbox" class="value" name="values[]" value="{{ value }}"> {{ value }} <br>
+                    {% endif %}
+                {% endfor %}
+            </label> <br>
+        {% else %}
+            <label> Тип признака
+                <input type="text" value="Количественный признак" disabled>
+            </label> <br>
+            <label> Значение количественного признака [
+                <input
+                        type="number"
+                        min="{{ possible_values[0] }}"
+                        max="{{ possible_values[1] }} "
+                        name="min"
+                        required
+                        value="{{ values[0] }}"
+                >
+                -
+                <input
+                        type="number"
+                        min="{{ possible_values[0] }}"
+                        max="{{ possible_values[1] }}"
+                        name="max"
+                        required
+                        value="{{ values[1] }}"
+                >
+                ]
+            </label> <br>
+        {% endif %}
+        <input hidden name="submit">
+        <input type="submit" value="Сохранить">
+    </form>
 
     <a href="{{ path('value_of_feature_index') }}">Назад к редактору</a>
 {% endblock %}
