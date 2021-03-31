@@ -53,7 +53,7 @@ class Validator
             if ($feature->getPossibleValue() === null) {
                 $report[$feature->getName()] = [
                     "У признака \"$feature\" отсутствуют возможные значения",
-                    $this->urlGenerator->generate('possible_value_new')
+                    $this->urlGenerator->generate('possible_value_new', ['feature_id' => $feature->getId()])
                 ];
             }
         }
