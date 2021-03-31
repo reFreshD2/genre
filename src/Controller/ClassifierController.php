@@ -43,22 +43,17 @@ class ClassifierController extends AbstractController
     /**
      * @Route("/classifier", name="classifier_make")
      */
-    public function classify(Request $request): Response
+    public function classify(Request $request, array $features): Response
     {
         if ($request->request->has('submit')) {
             $explain = [];
             $genres = $this->genreRepository->findAll();
-            $features = $this->featureRepository->findAll();
             $notValidItem = array_keys($this->validator->validate());
 
-            array_map(static function ($genre) use ($notValidItem) {
+            array_map(function ($genre) use ($notValidItem) {
                 return !in_array($genre->getName(), $notValidItem) ? $genre : null;
             }, $genres);
-            array_map(static function ($feature) use ($notValidItem) {
-                return !in_array($feature->getName(), $notValidItem) ? $feature : null;
-            }, $features);
             array_filter($genres);
-            array_filter($features);
 
             foreach ($features as $feature) {
                 if (!$request->request->has($feature->getAlias())) {
@@ -110,7 +105,33 @@ class ClassifierController extends AbstractController
         }
 
         return $this->render('classifier/form.html.twig', [
-            'features' => $this->featureRepository->findAll()
+            'features' => $this->features
+        ]);
+    }
+
+    /**
+     * @Route("/classifier_features", name="classifier_features")
+     */
+    public function selectFeature(Request $request): Response
+    {
+        if ($request->request->has('submit')) {
+            $features = [];
+            foreach ($request->request->get('features') as $featureId) {
+                $features[] = $this->featureRepository->findOneBy(['id' => $featureId]);
+            }
+            $this->redirectToRoute('classifier_make', ['features' => $features]);
+        }
+
+        $features = $this->featureRepository->findAll();
+        $notValidItem = array_keys($this->validator->validate());
+
+        array_map(function ($feature) use ($notValidItem) {
+            return !in_array($feature->getName(), $notValidItem) ? $feature : null;
+        }, $features);
+        array_filter($features);
+
+        return $this->render('classifier/features.html.twig', [
+            'features' => $features
         ]);
     }
 }
