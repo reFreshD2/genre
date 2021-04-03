@@ -13,12 +13,12 @@
             <label> Тип признака
                 <input type="text" value="Качественный признак" disabled>
             </label> <br>
-            <label> Значение качественного признака <br>
+            <label> Значение качественного признака
                 {% for value in values %}
                     <br> <input type="text" class="value" name="values[]" value="{{ value }}" required>
                     <input type="button" class="del" value="-">
                 {% endfor %}
-                <input type="button" id="add" value="+">
+                <br> <input type="button" id="add" value="+">
             </label> <br>
         {% else %}
             <label> Тип признака
