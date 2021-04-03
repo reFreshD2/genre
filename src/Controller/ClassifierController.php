@@ -45,36 +45,29 @@ class ClassifierController extends AbstractController
      */
     public function classify(Request $request): Response
     {
-        $featuresId = $request->query->get('features');
-        $features = [];
-        foreach ($featuresId as $id) {
-            $features[] = $this->featureRepository->findOneBy(['id' => $id]);
-        }
-
         if ($request->request->has('submit')) {
             $explain = [];
             $genres = $this->genreRepository->findAll();
+            $features = $this->featureRepository->findAll();
             $notValidItem = array_keys($this->validator->validate());
 
-            array_map(function ($genre) use ($notValidItem) {
-                return !in_array($genre->getName(), $notValidItem) ? $genre : null;
-            }, $genres);
-            array_filter($genres);
+            $features = $this->deleteNotValid($features, $notValidItem);
+            $genres = $this->deleteNotValid($genres, $notValidItem);
 
             foreach ($features as $feature) {
                 if (!$request->request->has($feature->getAlias())) {
-                    $explain[] = "Признак \"$feature\" не участвовал в классификации, т.к. было передано пустое значение";
                     break;
                 }
                 $value = $request->request->get($feature->getAlias());
-                array_map(function ($genre) use ($value, $feature, &$explain) {
+
+                foreach ($genres as $genre) {
                     $valuesForGenre = $this->valueOfFeatureRepository->findOneBy([
                         'genre' => $genre,
                         'feature' => $feature
                     ]);
                     if (!$valuesForGenre) {
                         $explain[] = "Жанр \"$genre\" не подходит, т.к. признак\"$feature\" не задан у данного жанра";
-                        return null;
+                        unset($genres[array_search($genre,$genres)]);
                     }
                     $valuesForGenre = json_decode($valuesForGenre->getValue(), true);
                     if ($feature->getType() === Feature::QUALITATIVE) {
@@ -87,27 +80,32 @@ class ClassifierController extends AbstractController
                         }
                         if (!$isFind) {
                             $explain[] = "Жанр \"$genre\" не подходит, т.к. значение признака \"$feature\" - $value не входит во множество значений данного признака.";
-                            return null;
+                            unset($genres[array_search($genre,$genres)]);
                         }
                     } else {
                         if ($value < $valuesForGenre[0]) {
                             $explain[] = "Жанр \"$genre\" не подходит, т.к. значение признака \"$feature\" - $value меньше нижней границы ($valuesForGenre[0]) множества значений данного признака.";
-                            return null;
+                            unset($genres[array_search($genre,$genres)]);
                         }
                         if ($value > $valuesForGenre[1]) {
                             $explain[] = "Жанр \"$genre\" не подходит, т.к. значение признака \"$feature\" - $value больше верхней границы ($valuesForGenre[1]) множества значений данного признака.";
-                            return null;
+                            unset($genres[array_search($genre,$genres)]);
                         }
                     }
-                    return $genre;
-                }, $genres);
-                array_filter($genres);
+                    array_filter($genres);
+                }
             }
 
             return $this->render('classifier/answer.html.twig', [
                 'genres' => $genres,
                 'explain' => $explain
             ]);
+        }
+
+        $featuresId = $request->query->get('features');
+        $features = [];
+        foreach ($featuresId as $id) {
+            $features[] = $this->featureRepository->findOneBy(['id' => $id]);
         }
 
         return $this->render('classifier/form.html.twig', [
@@ -125,15 +123,22 @@ class ClassifierController extends AbstractController
         }
 
         $features = $this->featureRepository->findAll();
-        $notValidItem = array_keys($this->validator->validate());
-
-        array_map(function ($feature) use ($notValidItem) {
-            return !in_array($feature->getName(), $notValidItem) ? $feature : null;
-        }, $features);
-        array_filter($features);
+        $notValidItems = array_keys($this->validator->validate());
 
         return $this->render('classifier/features.html.twig', [
-            'features' => $features
+            'features' => $this->deleteNotValid($features, $notValidItems)
         ]);
+    }
+
+    private function deleteNotValid(array $heystack, array $notValid): array {
+        foreach ($heystack as $item) {
+            foreach ($notValid as $notValidItem) {
+                if ($item->getName() === $notValidItem) {
+                    unset($heystack[array_search($item, $heystack)]);
+                }
+            }
+        }
+
+        return array_filter($heystack);
     }
 }
