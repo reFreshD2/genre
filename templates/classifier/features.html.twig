@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Выбор признаков для классификации</h1>
 
-    <form action="{{ path('classifier_make') }}" method="post">
+    <form action="{{ path('classifier_features') }}" method="post">
         {% for feature in features %}
             <label> {{ feature.name }}
                 <input type="checkbox" value="{{ feature.id }}" name="features[]">

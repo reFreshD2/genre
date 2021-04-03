@@ -43,8 +43,14 @@ class ClassifierController extends AbstractController
     /**
      * @Route("/classifier", name="classifier_make")
      */
-    public function classify(Request $request, array $features): Response
+    public function classify(Request $request): Response
     {
+        $featuresId = $request->query->get('features');
+        $features = [];
+        foreach ($featuresId as $id) {
+            $features[] = $this->featureRepository->findOneBy(['id' => $id]);
+        }
+
         if ($request->request->has('submit')) {
             $explain = [];
             $genres = $this->genreRepository->findAll();
@@ -105,7 +111,7 @@ class ClassifierController extends AbstractController
         }
 
         return $this->render('classifier/form.html.twig', [
-            'features' => $this->features
+            'features' => $features
         ]);
     }
 
@@ -115,11 +121,7 @@ class ClassifierController extends AbstractController
     public function selectFeature(Request $request): Response
     {
         if ($request->request->has('submit')) {
-            $features = [];
-            foreach ($request->request->get('features') as $featureId) {
-                $features[] = $this->featureRepository->findOneBy(['id' => $featureId]);
-            }
-            $this->redirectToRoute('classifier_make', ['features' => $features]);
+            return $this->redirectToRoute('classifier_make', ['features' => $request->request->get('features')]);
         }
 
         $features = $this->featureRepository->findAll();
