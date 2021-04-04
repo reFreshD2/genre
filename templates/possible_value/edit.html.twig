@@ -1,42 +1,67 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Редактор возможных значений{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="/assets/css/form.css">
+{% endblock %}
 
 {% block body %}
     <h1>Редактирование возможного значения</h1>
 
     <form action="{{ path('possible_value_edit', {'id': possible_value.id}) }}" method="post">
-        <label> Признак
-            <input type="text" value="{{ possible_value.feature }}" disabled>
-        </label> <br>
+        <div class="group">
+            <label class="dis">Признак</label>
+            <input type="text" value="{{ possible_value.feature }}" disabled class="input">
+            <span class="highlight"></span>
+            <span class="bar"></span>
+        </div>
+
         {% if possible_value.feature.type == 0 %}
-            <label> Тип признака
-                <input type="text" value="Качественный признак" disabled>
-            </label> <br>
-            <label> Значение качественного признака
-                {% for value in values %}
-                    <br> <input type="text" class="value" name="values[]" value="{{ value }}" required>
-                    <input type="button" class="del" value="-">
-                {% endfor %}
-                <br> <input type="button" id="add" value="+">
-            </label> <br>
+            <div class="group">
+                <label class="dis">Тип признака</label>
+                <input type="text" value="Качественный признак" disabled class="input">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
+            {% for value in values %}
+            <div class="group">
+                <label class="dis">Значение качественного признака</label>
+                <input type="button" class="del" value="x">
+                <input type="text" class="value input" name="values[]" value="{{ value }}" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
+            {% endfor %}
+            <div class="group">
+                <input type="button" id="add" value="+">
+            </div>
         {% else %}
-            <label> Тип признака
-                <input type="text" value="Количественный признак" disabled>
-            </label> <br>
-            <label> Значение количественного признака [
-                <input type="number" min="0" name="min" value="{{ values[0] }}" required>
-                -
-                <input type="number" min="0" name="max" value="{{ values[1] }}" required>
-                ]
-            </label> <br>
+            <div class="group">
+                <label class="dis">Тип признака</label>
+                <input type="text" value="Количественный признак" disabled class="input">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
+            <div class="group">
+                <label class="dis">Минимальное значение</label>
+                <input type="number" min="0" name="min" value="{{ values[0] }}" required class="input">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
+            <div class="group">
+                <label class="dis">Максимальное значение</label>
+                <input type="number" min="0" name="min" value="{{ values[1] }}" required class="input">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
         {% endif %}
         <input hidden name="submit">
-        <input type="submit" value="Сохранить">
+        <input type="submit" value="Сохранить" class="nav">
+        {{ include('possible_value/_delete_form.html.twig') }}
     </form>
 
-    <a href="{{ path('possible_value_index') }}">Назад к редактору</a>
+    <div class="white_space">.</div>
+    <a href="{{ path('possible_value_index') }}" class="nav">Назад к редактору</a>
 
-    {{ include('possible_value/_delete_form.html.twig') }}
     <script src="/assets/js/possibleValue.js"></script>
 {% endblock %}

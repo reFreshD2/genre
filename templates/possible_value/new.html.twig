@@ -1,38 +1,63 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Редактор возможных значений{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="/assets/css/form.css">
+{% endblock %}
 
 {% block body %}
     <h1>Добавление возможного значения признака</h1>
 
     <form action="{{ path('possible_value_new', {'feature_id': feature.id}) }}" method="post">
-        <label> Признак
-            <input type="text" value="{{ feature }}" disabled>
-        </label> <br>
+        <div class="group">
+            <label class="dis">Признак</label>
+            <input type="text" value="{{ possible_value.feature }}" disabled class="input">
+            <span class="highlight"></span>
+            <span class="bar"></span>
+        </div>
+
         {% if feature.type == 0 %}
-            <label> Тип признака
-                <input type="text" value="Качественный признак" disabled>
-            </label> <br>
-            <label> Значение качественного признака <br>
-                <input type="text" class="value" name="values[]" required>
-                <input type="button" class="del" value="-"> <br>
+            <div class="group">
+                <label class="dis">Тип признака</label>
+                <input type="text" value="Качественный признак" disabled class="input">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
+            <div class="group">
+                <label class="dis">Значение качественного признака</label>
+                <input type="button" class="del" value="x">
+                <input type="text" class="value input" name="values[]" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
+            <div class="group">
                 <input type="button" id="add" value="+">
-            </label> <br>
+            </div>
         {% else %}
-            <label> Тип признака
-                <input type="text" value="Количественный признак" disabled>
-            </label> <br>
-            <label> Значение количественного признака [
-                <input type="number" min="0" name="min" required>
-                -
-                <input type="number" min="0" name="max" required>
-                ]
-            </label> <br>
+            <div class="group">
+                <label class="dis">Тип признака</label>
+                <input type="text" value="Количественный признак" disabled class="input">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
+            <div class="group">
+                <label class="dis">Минимальное значение</label>
+                <input type="number" min="0" name="min" required class="input">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
+            <div class="group">
+                <label class="dis">Максимальное значение</label>
+                <input type="number" min="0" name="min" required class="input">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
         {% endif %}
         <input hidden name="submit">
-        <input type="submit" value="Сохранить">
+        <input type="submit" value="Сохранить" class="nav">
     </form>
 
-    <a href="{{ path('possible_value_index') }}">Назад к редактору</a>
+    <div class="white_space">.</div>
+    <a href="{{ path('possible_value_index') }}" class="nav">Назад к редактору</a>
     <script src="/assets/js/possibleValue.js"></script>
 {% endblock %}
