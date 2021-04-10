@@ -1,11 +1,29 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Редактор жанров{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="/assets/css/form.css">
+{% endblock %}
 
 {% block body %}
     <h1>Добавление жанра</h1>
 
-    {{ include('genre/_form.html.twig') }}
+   <form action="{{ path('genre_new') }}" method="post">
+       <div class="group">
+           <label class="dis">Название жанра</label>
+           <input type="text" class="input" name="name" required>
+           <span class="highlight"></span>
+           <span class="bar"></span>
+       </div>
+       <div class="group">
+           <label class="dis">Alias для формы</label>
+           <input type="text" class="input" name="alias" required>
+           <span class="highlight"></span>
+           <span class="bar"></span>
+       </div>
+       <input hidden name="submit">
+       <input type="submit" value="Сохранить" class="nav">
+   </form>
 
     <div class="white_space">.</div>
 

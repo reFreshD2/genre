@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Редактор значений признаков для жанра{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="/assets/css/form.css">
+{% endblock %}
+
 
 {% block body %}
     <h1>Добавление значения признака "{{ value_of_feature.feature }}" для жанра "{{ value_of_feature.genre }}"</h1>
@@ -10,18 +14,34 @@
         'feature': value_of_feature.feature
     }) }}" method="post">
         {% if value_of_feature.feature.type == 0 %}
-            <label> Тип признака
-                <input type="text" value="Качественный признак" disabled>
-            </label> <br>
-            <label> Значение качественного признака <br>
-                {% for value in possible_values %}
-                    <input type="checkbox" class="value" name="values[]" value="{{ value }}"> {{ value }} <br>
-                {% endfor %}
-            </label> <br>
+            <div class="group">
+                <label class="dis">Тип признака</label>
+                <input type="text" class="input" value="Качественный признак" disabled>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
+            <label class="dis">Значение признака</label>
+            <div class="container">
+                <ul class="ks-cboxtags">
+                    {% for value in possible_values %}
+                        <li>
+                            <input type="checkbox" id="{{ value }}" value="{{ value }}" class="value checkbox"
+                                   name="values[]">
+                            <label for="{{ value }}">{{ value }}</label>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <input type="button" value="Выбрать все" class="nav" id="selectAll">
+            <input type="button" value="Убрать все" class="nav" id="unselectAll">
         {% else %}
-            <label> Тип признака
-                <input type="text" value="Количественный признак" disabled>
-            </label> <br>
+            <div class="group">
+                <label class="dis">Тип признака</label>
+                <input type="text" class="input" value="Количественный признак" disabled>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
             <label> Значение количественного признака [
                 <input type="number" min="{{ possible_values[0] }}" max="{{ possible_values[1] }} " name="min" required>
                 -
@@ -30,8 +50,11 @@
             </label> <br>
         {% endif %}
         <input hidden name="submit">
-        <input type="submit" value="Сохранить">
+        <input type="submit" value="Сохранить" class="nav">
     </form>
 
+    <div class="white_space">.</div>
+
     <a href="{{ path('value_of_feature_index') }}">Назад к редактору</a>
+    <script src="/assets/js/select.js"></script>
 {% endblock %}

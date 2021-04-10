@@ -41,6 +41,18 @@ class Validator
                     "У жанра \"$genre\" отсутствуют признаки",
                     $this->urlGenerator->generate('features_of_genre_edit', ['id' => $genre->getId()])
                 ];
+                continue;
+            }
+            foreach ($genre->getFeatures() as $feature) {
+                if (!$this->valueOfFeatureRepository->findOneBy(['genre' => $genre, 'feature' => $feature])) {
+                    $report[$genre->getName()] = [
+                        "У жанра \"$genre\" для признака \"$feature\" отсутствует значение",
+                        $this->urlGenerator->generate('value_of_feature_new', [
+                            'genre' => $genre,
+                            'feature' => $feature
+                        ])
+                    ];
+                }
             }
         }
         foreach ($this->featureRepository->findAll() as $feature) {
@@ -76,7 +88,7 @@ class Validator
                     "Признак \"$feature\" для жанра \"$genre\" имеет пустое значение",
                     $this->urlGenerator->generate('value_of_feature_edit', ['id' => $valueOfFeature->getId()])
                 ];
-                break;
+                continue;
             }
             $possibleValue = \json_decode($valueOfFeature->getFeature()->getPossibleValue()->getValue(), true);
             if (

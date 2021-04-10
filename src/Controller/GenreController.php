@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Genre;
-use App\Form\GenreType;
 use App\Repository\GenreRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,10 +32,9 @@ class GenreController extends AbstractController
         $genre = new Genre();
         $genre->setChangeAt(new \DateTime('now'));
 
-        $form = $this->createForm(GenreType::class, $genre);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($request->request->has('submit')) {
+            $genre->setName($request->request->get('name'));
+            $genre->setAlias($request->request->get('alias'));
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($genre);
             $entityManager->flush();
@@ -44,10 +42,7 @@ class GenreController extends AbstractController
             return $this->redirectToRoute('genre_index');
         }
 
-        return $this->render('genre/new.html.twig', [
-            'genre' => $genre,
-            'form' => $form->createView(),
-        ]);
+        return $this->render('genre/new.html.twig');
     }
 
     /**
@@ -55,18 +50,16 @@ class GenreController extends AbstractController
      */
     public function edit(Request $request, Genre $genre): Response
     {
-        $form = $this->createForm(GenreType::class, $genre);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($request->request->has('submit')) {
+            $genre->setName($request->request->get('name'));
+            $genre->setAlias($request->request->get('alias'));
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('genre_index');
         }
 
         return $this->render('genre/edit.html.twig', [
-            'genre' => $genre,
-            'form' => $form->createView(),
+            'genre' => $genre
         ]);
     }
 

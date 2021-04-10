@@ -37,7 +37,11 @@ class PossibleValueController extends AbstractController
         if ($request->request->has('submit')) {
             if ($feature->getType() === Feature::QUALITATIVE) {
                 $values = $request->request->get('values');
-                $possibleValue->setValue(implode(',', $values));
+                if (!empty($values)) {
+                    $possibleValue->setValue(implode(',', $values));
+                } else {
+                    $possibleValue->setValue("");
+                }
             } else {
                 $min = min($request->request->get('min'), $request->request->get('max'));
                 $max = max($request->request->get('min'), $request->request->get('max'));
@@ -64,7 +68,11 @@ class PossibleValueController extends AbstractController
         if ($request->request->has('submit')) {
             if ($possibleValue->getFeature()->getType() === Feature::QUALITATIVE) {
                 $values = $request->request->get('values');
-                $possibleValue->setValue(implode(',', $values));
+                if (!empty($values)) {
+                    $possibleValue->setValue(implode(',', $values));
+                } else {
+                    $possibleValue->setValue("");
+                }
             } else {
                 $min = min($request->request->get('min'), $request->request->get('max'));
                 $max = max($request->request->get('min'), $request->request->get('max'));
@@ -86,7 +94,7 @@ class PossibleValueController extends AbstractController
      */
     public function delete(Request $request, PossibleValue $possibleValue): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$possibleValue->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $possibleValue->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($possibleValue);
             $entityManager->flush();

@@ -9,7 +9,6 @@
         <thead>
             <tr>
                 <th scope="col">Название жанра</th>
-                <th scope="col">Alias для форм</th>
                 <th scope="col">Действия</th>
             </tr>
         </thead>
@@ -17,7 +16,6 @@
         {% for genre in genres %}
             <tr>
                 <td>{{ genre.name }}</td>
-                <td>{{ genre.alias }}</td>
                 <td>
                     <a href="{{ path('genre_edit', {'id': genre.id}) }}">Редактировать</a>
                 </td>

@@ -10,7 +10,6 @@
         <tr>
             <th>Название жанра</th>
             <th>Тип</th>
-            <th>Alias для форм</th>
             <th>Действия</th>
         </tr>
         </thead>
@@ -27,7 +26,6 @@
                         Тип признака не указан
                     {% endif %}
                 </td>
-                <td>{{ feature.alias }}</td>
                 <td>
                     <a href="{{ path('feature_edit', {'id': feature.id}) }}">Редактировать</a>
                 </td>

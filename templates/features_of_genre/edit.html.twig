@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Редактор признаков жанров{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="/assets/css/form.css">
+{% endblock %}
 
 {% block body %}
     <h1>Редактирование признаков жанров</h1>
@@ -9,9 +12,33 @@
         Выбирите признаки класса
     </div>
 
-    {{ include('features_of_genre/_form.html.twig', {'button_label': 'Обновить'}) }}
+    <form action="{{ path('features_of_genre_edit', {'id': genre.id}) }}" method="post">
+        <div class="container">
+            <ul class="ks-cboxtags">
+                {% for feature in features %}
+                    {% if feature in genre.features %}
+                    <li>
+                        <input type="checkbox" id="{{ feature.id }}" value="{{ feature.id }}" checked class="checkbox" name="features[]">
+                        <label for="{{ feature.id }}">{{ feature.name }}</label>
+                    </li>
+                    {% else %}
+                        <li>
+                            <input type="checkbox" id="{{ feature.id }}" value="{{ feature.id }}" class="checkbox" name="features[]">
+                            <label for="{{ feature.id }}">{{ feature.name }}</label>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        <input hidden name="submit">
+        <input type="submit" value="Сохранить" class="nav">
+        <input type="button" value="Выбрать все" class="nav" id="selectAll">
+        <input type="button" value="Убрать все" class="nav" id="unselectAll">
+    </form>
 
     <div class="white_space">.</div>
 
     <a href="{{ path('features_of_genre_index') }}">Назад к редактору</a>
+    <script src="/assets/js/select.js"></script>
 {% endblock %}

@@ -1,6 +1,6 @@
 .group {
     position: relative;
-    margin-bottom: 45px;
+    margin-bottom: 15px;
 }
 
 .input {
@@ -142,4 +142,139 @@
 #add:active {
     box-shadow: none;
     top: 1px;
+}
+
+.form_radio_group {
+    display: inline-block;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+.form_radio_group-item {
+    display: inline-block;
+    float: left;
+}
+.form_radio_group input[type=radio] {
+    display: none;
+}
+.form_radio_group label {
+    display: inline-block;
+    cursor: pointer;
+    padding: 0px 5px;
+    line-height: 34px;
+    border: 1px solid darkred;
+    border-right: none;
+    user-select: none;
+}
+
+.form_radio_group .form_radio_group-item:first-child label {
+    border-radius: 6px 0 0 6px;
+}
+.form_radio_group .form_radio_group-item:last-child label {
+    border-radius: 0 6px 6px 0;
+    border-right: 1px solid #999;
+}
+
+/* Checked */
+.form_radio_group input[type=radio]:checked + label {
+    background: #B0413E;
+}
+
+/* Hover */
+.form_radio_group label:hover {
+    color: darkred;
+}
+
+select {
+    -webkit-appearance: none;
+    padding: 7px 40px 7px 12px;
+    width: 100%;
+    border: 1px solid #E8EAED;
+    border-radius: 5px;
+    background: white;
+    box-shadow: 0 1px 3px -2px #9098A9;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 16px;
+    transition: all 150ms ease;
+}
+
+option {
+    color: #223254;
+}
+
+option:focus {
+    outline: none;
+    border-color: #0077FF;
+    box-shadow: 0 0 0 2px #0077FF;
+}
+
+option:hover {
+    stroke: #0077FF
+}
+
+.container {
+    max-width: 640px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 13px;
+}
+
+ul.ks-cboxtags {
+    list-style: none;
+    padding-left: 5px;
+}
+ul.ks-cboxtags li{
+    display: inline;
+}
+ul.ks-cboxtags li label{
+    display: inline-block;
+    background-color: rgba(255, 255, 255, .9);
+    border: 2px solid darkred;
+    border-radius: 25px;
+    white-space: nowrap;
+    margin: 3px 0px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: all .2s;
+}
+
+ul.ks-cboxtags li label {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+ul.ks-cboxtags li label::before {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 900;
+    font-size: 12px;
+    padding: 2px 6px 2px 2px;
+    content: "\d7";
+    transition: transform .3s ease-in-out;
+}
+
+ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
+    content: "\2713";
+    transform: rotate(-360deg);
+    transition: transform .3s ease-in-out;
+}
+
+ul.ks-cboxtags li input[type="checkbox"]:checked + label {
+    border: 2px solid darkred;
+    background-color: #B0413E;
+    color: white;
+    transition: all .2s;
+}
+
+ul.ks-cboxtags li input[type="checkbox"] {
+    display: none;
+}
+ul.ks-cboxtags li input[type="checkbox"]:focus + label {
+    border: 2px solid black;
 }

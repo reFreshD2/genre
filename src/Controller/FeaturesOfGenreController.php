@@ -3,8 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Genre;
-use App\Form\FeaturesOfGenreType;
-use App\Form\GenreType;
+use App\Repository\FeatureRepository;
 use App\Repository\GenreRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,12 +28,15 @@ class FeaturesOfGenreController extends AbstractController
     /**
      * @Route("/{id}/edit", name="features_of_genre_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Genre $genre): Response
+    public function edit(Request $request, Genre $genre, FeatureRepository $featureRepository): Response
     {
-        $form = $this->createForm(FeaturesOfGenreType::class, $genre);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($request->request->has('submit')) {
+            $genre->getFeatures()->clear();
+            $featuresId = $request->request->get('features');
+            foreach ($featuresId as $id) {
+                $feature = $featureRepository->findOneBy(['id' => $id]);
+                $genre->addFeature($feature);
+            }
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('features_of_genre_index');
@@ -42,7 +44,7 @@ class FeaturesOfGenreController extends AbstractController
 
         return $this->render('features_of_genre/edit.html.twig', [
             'genre' => $genre,
-            'form' => $form->createView(),
+            'features' => $featureRepository->findAll()
         ]);
     }
 }

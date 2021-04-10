@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Feature;
-use App\Form\FeatureType;
 use App\Repository\FeatureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,11 +30,11 @@ class FeatureController extends AbstractController
     public function new(Request $request): Response
     {
         $feature = new Feature();
-        $form = $this->createForm(FeatureType::class, $feature);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $feature->setType($request->request->get('feature')['type']);
+        if ($request->request->has('submit')) {
+            $feature->setName($request->request->get('name'));
+            $feature->setAlias($request->request->get('alias'));
+            $feature->setType($request->request->get('type'));
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($feature);
@@ -44,10 +43,7 @@ class FeatureController extends AbstractController
             return $this->redirectToRoute('feature_index');
         }
 
-        return $this->render('feature/new.html.twig', [
-            'feature' => $feature,
-            'form' => $form->createView(),
-        ]);
+        return $this->render('feature/new.html.twig');
     }
 
     /**
@@ -55,11 +51,11 @@ class FeatureController extends AbstractController
      */
     public function edit(Request $request, Feature $feature): Response
     {
-        $form = $this->createForm(FeatureType::class, $feature);
-        $form->handleRequest($request);
+        if ($request->request->has('submit')) {
+            $feature->setName($request->request->get('name'));
+            $feature->setAlias($request->request->get('alias'));
+            $feature->setType($request->request->get('type'));
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $feature->setType($request->request->get('feature')['type']);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('feature_index');
@@ -67,7 +63,6 @@ class FeatureController extends AbstractController
 
         return $this->render('feature/edit.html.twig', [
             'feature' => $feature,
-            'form' => $form->createView(),
         ]);
     }
 

@@ -1,11 +1,39 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Редактор признаков{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="/assets/css/form.css">
+{% endblock %}
 
 {% block body %}
     <h1>Добавление признака</h1>
 
-    {{ include('feature/_form.html.twig') }}
+    <form action="{{ path('feature_new') }}" method="post">
+        <div class="group">
+            <label class="dis">Название признака</label>
+            <input type="text" class="input" name="name" required>
+            <span class="highlight"></span>
+            <span class="bar"></span>
+        </div>
+        <div class="form_radio_group">
+            <div class="form_radio_group-item">
+                <input id="radio-1" type="radio" name="type" value="0" checked required>
+                <label for="radio-1">Качественный признак</label>
+            </div>
+            <div class="form_radio_group-item">
+                <input id="radio-2" type="radio" name="type" value="1" required>
+                <label for="radio-2">Количественный признак</label>
+            </div>
+        </div>
+        <div class="group">
+            <label class="dis">Alias для формы</label>
+            <input type="text" class="input" name="alias" required>
+            <span class="highlight"></span>
+            <span class="bar"></span>
+        </div>
+        <input hidden name="submit">
+        <input type="submit" value="Сохранить" class="nav">
+    </form>
 
     <div class="white_space">.</div>
 
