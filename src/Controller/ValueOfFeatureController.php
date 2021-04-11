@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Feature;
 use App\Entity\ValueOfFeature;
-use App\Form\ValueOfFeatureType;
 use App\Repository\FeatureRepository;
 use App\Repository\GenreRepository;
 use App\Repository\ValueOfFeatureRepository;
@@ -19,17 +18,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class ValueOfFeatureController extends AbstractController
 {
     /**
-     * @Route("/", name="value_of_feature_index", methods={"GET", "POST"})
+     * @Route("/{genreId}", name="value_of_feature_index", methods={"GET", "POST"}, requirements={"genreId"="\d+"})
      */
     public function index(
         GenreRepository $genreRepository,
         ValueOfFeatureRepository $valueOfFeatureRepository,
-        Request $request
+        Request $request,
+        $genreId = null
     ): Response
     {
-        $genre = null;
+        $genre = $genreId;
         if ($request->request->has('submit')) {
             $genre = $genreRepository->findOneBy(['id' => $request->request->get('select')]);
+        }
+        if ($genreId) {
+            $genre = $genreRepository->findOneBy(['id' => $genreId]);
         }
 
         return $this->render('value_of_feature/index.html.twig', [
@@ -54,7 +57,11 @@ class ValueOfFeatureController extends AbstractController
         if ($request->request->has('submit')) {
             if ($feature->getType() === Feature::QUALITATIVE) {
                 $values = $request->request->get('values');
-                $valueOfFeature->setValue(implode(',', $values));
+                if (!empty($values)) {
+                    $valueOfFeature->setValue(implode(',', $values));
+                } else {
+                    $valueOfFeature->setValue("");
+                }
             } else {
                 $min = min($request->request->get('min'), $request->request->get('max'));
                 $max = max($request->request->get('min'), $request->request->get('max'));
@@ -64,7 +71,9 @@ class ValueOfFeatureController extends AbstractController
             $entityManager->persist($valueOfFeature);
             $entityManager->flush();
 
-            return $this->redirectToRoute('value_of_feature_index');
+            return $this->redirectToRoute('value_of_feature_index', [
+                'genreId' => $valueOfFeature->getGenre()->getId()
+            ]);
         }
 
         return $this->render('value_of_feature/new.html.twig', [
@@ -81,7 +90,11 @@ class ValueOfFeatureController extends AbstractController
         if ($request->request->has('submit')) {
             if ($valueOfFeature->getFeature()->getType() === Feature::QUALITATIVE) {
                 $values = $request->request->get('values');
-                $valueOfFeature->setValue(implode(',', $values));
+                if (!empty($values)) {
+                    $valueOfFeature->setValue(implode(',', $values));
+                } else {
+                    $valueOfFeature->setValue("");
+                }
             } else {
                 $min = min($request->request->get('min'), $request->request->get('max'));
                 $max = max($request->request->get('min'), $request->request->get('max'));
@@ -89,7 +102,9 @@ class ValueOfFeatureController extends AbstractController
             }
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('value_of_feature_index');
+            return $this->redirectToRoute('value_of_feature_index', [
+                'genreId' => $valueOfFeature->getGenre()->getId()
+            ]);
         }
 
         return $this->render('value_of_feature/edit.html.twig', [

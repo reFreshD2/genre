@@ -1,25 +1,51 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Классификатор{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="/assets/css/answer.css">
+    <link href="http://fonts.googleapis.com/css?family=Neucha&subset=cyrillic" rel="stylesheet" type="text/css">
+{% endblock %}
+
 
 {% block body %}
     <h1>Результат классификации</h1>
 
-    {% if genres %}
-        Возможный(е) жанр(ы):
-        {% for genre in genres %}
-            {{ genre }} <br>
-        {% endfor %}
-    {% else %}
-        Не один жанр не подходит под предложенное описание <br>
-    {% endif %}
+    <div>
+        <ul>
+            {% if genres %}
+                {% for genre in genres %}
+                    <li>
+                        <a href="#" class="_a">
+                            <h2>Возможный жанр</h2>
+                            <p>{{ genre }}</p>
+                        </a>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li>
+                    <a href="#" class="_a">
+                        <h2>Упс ...</h2>
+                        <p>Не один жанр не подходит под предложенное описание</p>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
 
-    Обоснование: <br>
-    {% for item in explain %}
-        {{ item }} <br>
-    {% else %}
-        Да вообще хз, если честно 🤖
-    {% endfor %}
+    <div>
+        <ul>
+            {% for genre, expl in explain %}
+                <li>
+                    <a href="#" class="_a not">
+                        <h2>Жанр "{{ genre }}" не подошел</h2>
+                        <p>{{ expl }}</p>
+                    </a>
+                </li>
+            {% else %}
+                Да вообще хз, если честно 🤖
+            {% endfor %}
+        </ul>
+    </div>
 
-    <a href="{{ path('classifier') }}">Назад</a>
+    <a href="{{ path('classifier') }}" class="nav">Назад</a>
 {% endblock %}

@@ -1,39 +1,66 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Редактор значения признака для жанра{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="/assets/css/form.css">
+{% endblock %}
 
 {% block body %}
     <h1>Редактирование значения признака "{{ value_of_feature.feature }}" для жанра "{{ value_of_feature.genre }}"</h1>
 
     <form action="{{ path('value_of_feature_edit', {'id': value_of_feature.id}) }}" method="post">
         {% if value_of_feature.feature.type == 0 %}
-            <label> Тип признака
-                <input type="text" value="Качественный признак" disabled>
-            </label> <br>
-            <label> Значение качественного признака <br>
-                {% for value in possible_values %}
-                    {% if value in values %}
-                        <input type="checkbox" class="value" name="values[]" value="{{ value }}" checked> {{ value }}
-                        <br>
-                    {% else %}
-                        <input type="checkbox" class="value" name="values[]" value="{{ value }}"> {{ value }} <br>
-                    {% endif %}
-                {% endfor %}
-            </label> <br>
+            <div class="group">
+                <label class="dis">Тип признака</label>
+                <input type="text" class="input" value="Качественный признак" disabled>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
+            <div class="container">
+                <ul class="ks-cboxtags">
+                    {% for value in possible_values %}
+                        {% if value in values %}
+                            <li>
+                                <input type="checkbox" id="{{ value }}" value="{{ value }}" checked
+                                       class="checkbox value" name="values[]">
+                                <label for="{{ value }}">{{ value }}</label>
+                            </li>
+                        {% else %}
+                            <li>
+                                <input type="checkbox" id="{{ value }}" value="{{ value }}" class="checkbox value"
+                                       name="values[]">
+                                <label for="{{ value }}">{{ value }}</label>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <input type="button" value="Выбрать все" class="nav" id="selectAll">
+            <input type="button" value="Убрать все" class="nav" id="unselectAll">
         {% else %}
-            <label> Тип признака
-                <input type="text" value="Количественный признак" disabled>
-            </label> <br>
-            <label> Значение количественного признака [
+            <div class="group">
+                <label class="dis">Тип признака</label>
+                <input type="text" class="input" value="Количественный признак" disabled>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
+            <div class="group">
+                <label class="dis">Минимальное значение</label>
                 <input
                         type="number"
                         min="{{ possible_values[0] }}"
-                        max="{{ possible_values[1] }} "
+                        max="{{ possible_values[1] }}"
                         name="min"
                         required
                         value="{{ values[0] }}"
+                        class="input"
                 >
-                -
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
+            <div class="group">
+                <label class="dis">Максимальное значение</label>
                 <input
                         type="number"
                         min="{{ possible_values[0] }}"
@@ -41,13 +68,19 @@
                         name="max"
                         required
                         value="{{ values[1] }}"
+                        class="input"
                 >
-                ]
-            </label> <br>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+            </div>
         {% endif %}
         <input hidden name="submit">
-        <input type="submit" value="Сохранить">
+        <input type="submit" value="Сохранить" class="nav">
     </form>
 
-    <a href="{{ path('value_of_feature_index') }}">Назад к редактору</a>
+    <div class="white_space">.</div>
+
+    <a href="{{ path('value_of_feature_index', {'genreId': value_of_feature.genre.id }) }}" class="nav">Назад к
+        редактору</a>
+    <script src="/assets/js/select.js"></script>
 {% endblock %}

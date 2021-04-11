@@ -7,8 +7,8 @@
 
     {% if genre %}
         <form action="{{ path('value_of_feature_index') }}" method="post">
-            <label> Жанр
-                <select name="select" required>
+            <div class="select">
+                <select name="select" required class="select">
                     <option value="{{ genre.id }}"> {{ genre }}</option>
                     {% for otherGenre in genres %}
                         {% if otherGenre != genre %}
@@ -16,7 +16,7 @@
                         {% endif %}
                     {% endfor %}
                 </select>
-            </label>
+            </div>
             <input type="hidden" name="submit">
             <input type="submit" value="Выбрать" class="nav">
             <div class="white_space">.</div>
@@ -28,13 +28,14 @@
         } %}
     {% else %}
         <form action="{{ path('value_of_feature_index') }}" method="post">
-            <label> Жанр
+            <div class="select">
                 <select name="select" required>
+                    <option selected disabled>Выберите жанр</option>
                     {% for otherGenre in genres %}
                         <option value="{{ otherGenre.id }}">{{ otherGenre }}</option>
                     {% endfor %}
                 </select>
-            </label>
+            </div>
             <input type="hidden" name="submit">
             <input type="submit" value="Выбрать" class="nav">
             <div class="white_space">.</div>

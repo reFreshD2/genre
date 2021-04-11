@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Классификатор{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="/assets/css/form.css">
+{% endblock %}
 
 {% block body %}
     <h1>Классификая жанра</h1>
@@ -8,19 +11,26 @@
     <form action="{{ path('classifier_make') }}" method="post">
         {% for feature in features %}
             {% if feature.type == 0 %}
-                <label> {{ feature }}
-                    <input type="text" name="{{ feature.alias }}">
-                </label> <br>
+                <div class="group">
+                    <label class="dis">Значение качественного признака "{{ feature }}"</label>
+                    <input type="text" class="value input" name="{{ feature.alias }}" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                </div>
             {% else %}
-                <label> {{ feature }}
-                    <input type="number" name="{{ feature.alias }}">
-                </label> <br>
+                <div class="group">
+                    <label class="dis">Значение количественного признака "{{ feature }}"</label>
+                    <input type="number" required class="input" name="{{ feature.alias }}">
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                </div>
             {% endif %}
         {% endfor %}
 
         <input hidden name="submit">
-        <input type="submit" value="Классифицировать">
+        <input type="submit" value="Классифицировать" class="nav">
     </form>
 
-    <a href="{{ path('classifier') }}">Отмена</a>
+    <div class="white_space">.</div>
+    <a href="{{ path('classifier') }}" class="nav">Отмена</a>
 {% endblock %}

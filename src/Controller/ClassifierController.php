@@ -66,8 +66,9 @@ class ClassifierController extends AbstractController
                         'feature' => $feature
                     ]);
                     if (!$valuesForGenre) {
-                        $explain[] = "Жанр \"$genre\" не подходит, т.к. признак\"$feature\" не задан у данного жанра";
+                        $explain[$genre->getName()] = "Жанр не подходит, т.к. признак \"$feature\" не задан у данного жанра";
                         unset($genres[array_search($genre,$genres)]);
+                        continue;
                     }
                     $valuesForGenre = json_decode($valuesForGenre->getValue(), true);
                     if ($feature->getType() === Feature::QUALITATIVE) {
@@ -79,16 +80,16 @@ class ClassifierController extends AbstractController
                             }
                         }
                         if (!$isFind) {
-                            $explain[] = "Жанр \"$genre\" не подходит, т.к. значение признака \"$feature\" - $value не входит во множество значений данного признака.";
+                            $explain[$genre->getName()] = "Жанр не подходит, т.к. значение признака \"$feature\" - $value не входит во множество значений данного признака.";
                             unset($genres[array_search($genre,$genres)]);
                         }
                     } else {
                         if ($value < $valuesForGenre[0]) {
-                            $explain[] = "Жанр \"$genre\" не подходит, т.к. значение признака \"$feature\" - $value меньше нижней границы ($valuesForGenre[0]) множества значений данного признака.";
+                            $explain[$genre->getName()] = "Жанр не подходит, т.к. значение признака \"$feature\" - $value меньше нижней границы ($valuesForGenre[0]) множества значений данного признака.";
                             unset($genres[array_search($genre,$genres)]);
                         }
                         if ($value > $valuesForGenre[1]) {
-                            $explain[] = "Жанр \"$genre\" не подходит, т.к. значение признака \"$feature\" - $value больше верхней границы ($valuesForGenre[1]) множества значений данного признака.";
+                            $explain[$genre->getName()] = "Жанр не подходит, т.к. значение признака \"$feature\" - $value больше верхней границы ($valuesForGenre[1]) множества значений данного признака.";
                             unset($genres[array_search($genre,$genres)]);
                         }
                     }
