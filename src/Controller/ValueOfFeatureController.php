@@ -17,27 +17,36 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ValueOfFeatureController extends AbstractController
 {
+    private $genreRepository;
+    private $valueOfFeatureRepository;
+    private $featureRepository;
+
+    public function __construct(
+        GenreRepository $genreRepository,
+        ValueOfFeatureRepository $valueOfFeatureRepository,
+        FeatureRepository $featureRepository)
+    {
+        $this->genreRepository = $genreRepository;
+        $this->valueOfFeatureRepository = $valueOfFeatureRepository;
+        $this->featureRepository = $featureRepository;
+    }
+
     /**
      * @Route("/{genreId}", name="value_of_feature_index", methods={"GET", "POST"}, requirements={"genreId"="\d+"})
      */
-    public function index(
-        GenreRepository $genreRepository,
-        ValueOfFeatureRepository $valueOfFeatureRepository,
-        Request $request,
-        $genreId = null
-    ): Response
+    public function index(Request $request, $genreId = null): Response
     {
         $genre = $genreId;
         if ($request->request->has('submit')) {
-            $genre = $genreRepository->findOneBy(['id' => $request->request->get('select')]);
+            $genre = $this->genreRepository->findOneBy(['id' => $request->request->get('select')]);
         }
         if ($genreId) {
-            $genre = $genreRepository->findOneBy(['id' => $genreId]);
+            $genre = $this->genreRepository->findOneBy(['id' => $genreId]);
         }
 
         return $this->render('value_of_feature/index.html.twig', [
-            'genres' => $genreRepository->findAll(),
-            'valueOfFeature' => $valueOfFeatureRepository->findAll(),
+            'genres' => $this->genreRepository->findAll(),
+            'valueOfFeature' => $this->valueOfFeatureRepository->findAll(),
             'genre' => $genre
         ]);
     }
@@ -45,13 +54,13 @@ class ValueOfFeatureController extends AbstractController
     /**
      * @Route("/new_{genre}_{feature}", name="value_of_feature_new", methods={"GET","POST"})
      */
-    public function new(Request $request, GenreRepository $genreRepository, FeatureRepository $featureRepository): Response
+    public function new(Request $request): Response
     {
         $valueOfFeature = new ValueOfFeature();
-        $valueOfFeature->setGenre($genreRepository->findOneBy([
+        $valueOfFeature->setGenre($this->genreRepository->findOneBy([
             'name' => $request->attributes->get('genre')
         ]));
-        $feature = $featureRepository->findOneBy(['name' => $request->attributes->get('feature')]);
+        $feature = $this->featureRepository->findOneBy(['name' => $request->attributes->get('feature')]);
         $valueOfFeature->setFeature($feature);
 
         if ($request->request->has('submit')) {

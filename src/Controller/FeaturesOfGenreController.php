@@ -15,26 +15,35 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class FeaturesOfGenreController extends AbstractController
 {
+    private $genreRepository;
+    private $featureRepository;
+
+    public function __construct(GenreRepository $genreRepository, FeatureRepository $featureRepository)
+    {
+        $this->genreRepository = $genreRepository;
+        $this->featureRepository =$featureRepository;
+    }
+
     /**
      * @Route("/", name="features_of_genre_index", methods={"GET"})
      */
-    public function index(GenreRepository $genreRepository): Response
+    public function index(): Response
     {
         return $this->render('features_of_genre/index.html.twig', [
-            'genres' => $genreRepository->findAll(),
+            'genres' => $this->genreRepository->findAll(),
         ]);
     }
 
     /**
      * @Route("/{id}/edit", name="features_of_genre_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Genre $genre, FeatureRepository $featureRepository): Response
+    public function edit(Request $request, Genre $genre): Response
     {
         if ($request->request->has('submit')) {
             $genre->getFeatures()->clear();
             $featuresId = $request->request->get('features');
             foreach ($featuresId as $id) {
-                $feature = $featureRepository->findOneBy(['id' => $id]);
+                $feature = $this->featureRepository->findOneBy(['id' => $id]);
                 $genre->addFeature($feature);
             }
             $this->getDoctrine()->getManager()->flush();
@@ -44,7 +53,7 @@ class FeaturesOfGenreController extends AbstractController
 
         return $this->render('features_of_genre/edit.html.twig', [
             'genre' => $genre,
-            'features' => $featureRepository->findAll()
+            'features' => $this->featureRepository->findAll()
         ]);
     }
 }

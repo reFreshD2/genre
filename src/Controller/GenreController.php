@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Genre;
 use App\Repository\GenreRepository;
+use App\Repository\ValueOfFeatureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,13 +15,25 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class GenreController extends AbstractController
 {
+    private $genreRepository;
+    private $valueOfFeatureRepository;
+
+    public function __construct(
+        GenreRepository $genreRepository,
+        ValueOfFeatureRepository $valueOfFeatureRepository
+    )
+    {
+        $this->genreRepository = $genreRepository;
+        $this->valueOfFeatureRepository = $valueOfFeatureRepository;
+    }
+
     /**
      * @Route("/", name="genre_index", methods={"GET"})
      */
-    public function index(GenreRepository $genreRepository): Response
+    public function index(): Response
     {
         return $this->render('genre/index.html.twig', [
-            'genres' => $genreRepository->findAll(),
+            'genres' => $this->genreRepository->findAll(),
         ]);
     }
 
@@ -70,6 +83,12 @@ class GenreController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$genre->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
+
+            $valuesOfFeature = $this->valueOfFeatureRepository->findBy(['genre' => $genre]);
+            foreach ($valuesOfFeature as $value) {
+                $entityManager->remove($value);
+            }
+
             $entityManager->remove($genre);
             $entityManager->flush();
         }

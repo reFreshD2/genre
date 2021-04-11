@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Feature;
 use App\Repository\FeatureRepository;
+use App\Repository\PossibleValueRepository;
+use App\Repository\ValueOfFeatureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,13 +16,28 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class FeatureController extends AbstractController
 {
+    private $featureRepository;
+    private $possibleValueRepository;
+    private $valueOfFeatureRepository;
+
+    public function __construct(
+        FeatureRepository $featureRepository,
+        PossibleValueRepository $possibleValueRepository,
+        ValueOfFeatureRepository $valueOfFeatureRepository
+    )
+    {
+        $this->featureRepository = $featureRepository;
+        $this->possibleValueRepository = $possibleValueRepository;
+        $this->valueOfFeatureRepository = $valueOfFeatureRepository;
+    }
+
     /**
      * @Route("/", name="feature_index", methods={"GET"})
      */
-    public function index(FeatureRepository $featureRepository): Response
+    public function index(): Response
     {
         return $this->render('feature/index.html.twig', [
-            'features' => $featureRepository->findAll(),
+            'features' => $this->featureRepository->findAll(),
         ]);
     }
 
@@ -52,6 +69,17 @@ class FeatureController extends AbstractController
     public function edit(Request $request, Feature $feature): Response
     {
         if ($request->request->has('submit')) {
+            if ($feature->getType() !== $request->request->get('type')) {
+                $possibleValue = $this->possibleValueRepository->findOneBy(['feature' => $feature]);
+                $valuesOfFeature = $this->valueOfFeatureRepository->findBy(['feature' => $feature]);
+
+                if ($possibleValue) {
+                    $possibleValue->setValue("");
+                }
+                foreach ($valuesOfFeature as $value) {
+                    $value->setValue("");
+                }
+            }
             $feature->setName($request->request->get('name'));
             $feature->setAlias($request->request->get('alias'));
             $feature->setType($request->request->get('type'));
@@ -73,6 +101,17 @@ class FeatureController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$feature->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
+
+            $possibleValue = $this->possibleValueRepository->findOneBy(['feature' => $feature]);
+            $valuesOfFeature = $this->valueOfFeatureRepository->findBy(['feature' => $feature]);
+
+            if ($possibleValue) {
+                $entityManager->remove($possibleValue);
+            }
+            foreach ($valuesOfFeature as $value) {
+                $entityManager->remove($value);
+            }
+
             $entityManager->remove($feature);
             $entityManager->flush();
         }

@@ -15,22 +15,29 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PossibleValueController extends AbstractController
 {
+    private $featureRepository;
+
+    public function __construct(FeatureRepository $featureRepository)
+    {
+        $this->featureRepository = $featureRepository;
+    }
+
     /**
      * @Route("/", name="possible_value_index", methods={"GET"})
      */
-    public function index(FeatureRepository $featureRepository): Response
+    public function index(): Response
     {
         return $this->render('possible_value/index.html.twig', [
-            'features' => $featureRepository->findAll(),
+            'features' => $this->featureRepository->findAll(),
         ]);
     }
 
     /**
      * @Route("/new/{feature_id}", name="possible_value_new", methods={"GET","POST"})
      */
-    public function new(Request $request, FeatureRepository $featureRepository): Response
+    public function new(Request $request): Response
     {
-        $feature = $featureRepository->findOneBy(['id' => $request->attributes->get('feature_id')]);
+        $feature = $this->featureRepository->findOneBy(['id' => $request->attributes->get('feature_id')]);
         $possibleValue = new PossibleValue();
         $possibleValue->setFeature($feature);
 
