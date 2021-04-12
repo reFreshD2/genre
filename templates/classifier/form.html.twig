@@ -6,21 +6,35 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Классификая жанра</h1>
+    <h1>Классификация жанра</h1>
 
     <form action="{{ path('classifier_make') }}" method="post">
         {% for feature in features %}
             {% if feature.type == 0 %}
                 <div class="group">
                     <label class="dis">Значение качественного признака "{{ feature }}"</label>
-                    <input type="text" class="value input" name="{{ feature.alias }}" required>
+                    <input
+                            type="text"
+                            class="value input"
+                            name="{{ feature.alias }}"
+                            title="Возможные значения {{ possibleValues[feature.alias] }}"
+                            required
+                    >
                     <span class="highlight"></span>
                     <span class="bar"></span>
                 </div>
             {% else %}
                 <div class="group">
-                    <label class="dis">Значение количественного признака "{{ feature }}"</label>
-                    <input type="number" required class="input" name="{{ feature.alias }}">
+                    <label class="dis">
+                        Значение количественного признака "{{ feature }}"
+                    </label>
+                    <input
+                            type="number"
+                            required
+                            class="input"
+                            name="{{ feature.alias }}"
+                            title="Возможные значения {{ possibleValues[feature.alias] }}"
+                    >
                     <span class="highlight"></span>
                     <span class="bar"></span>
                 </div>

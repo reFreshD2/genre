@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Feature;
 use App\Repository\FeatureRepository;
 use App\Repository\GenreRepository;
+use App\Repository\PossibleValueRepository;
 use App\Repository\ValueOfFeatureRepository;
 use App\Util\Validator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,18 +19,21 @@ class ClassifierController extends AbstractController
     private $genreRepository;
     private $validator;
     private $valueOfFeatureRepository;
+    private $possibleValueRepository;
 
     public function __construct(
         FeatureRepository $featureRepository,
         GenreRepository $genreRepository,
         Validator $validator,
-        ValueOfFeatureRepository $valueOfFeatureRepository
+        ValueOfFeatureRepository $valueOfFeatureRepository,
+        PossibleValueRepository $possibleValueRepository
     )
     {
         $this->featureRepository = $featureRepository;
         $this->genreRepository = $genreRepository;
         $this->validator = $validator;
         $this->valueOfFeatureRepository = $valueOfFeatureRepository;
+        $this->possibleValueRepository = $possibleValueRepository;
     }
 
     /**
@@ -56,7 +60,7 @@ class ClassifierController extends AbstractController
 
             foreach ($features as $feature) {
                 if (!$request->request->has($feature->getAlias())) {
-                    break;
+                    continue;
                 }
                 $value = $request->request->get($feature->getAlias());
 
@@ -105,12 +109,24 @@ class ClassifierController extends AbstractController
 
         $featuresId = $request->query->get('features');
         $features = [];
+        $possibleValues = [];
+        if (!$featuresId) {
+            return $this->render('classifier/answer.html.twig', [
+                'genres' => $this->genreRepository->findAll(),
+                'explain' => null
+            ]);
+        }
         foreach ($featuresId as $id) {
             $features[] = $this->featureRepository->findOneBy(['id' => $id]);
         }
+        foreach ($features as $feature) {
+            $possibleValue = $this->possibleValueRepository->findOneBy(['feature' => $feature]);
+            $possibleValues[$feature->getAlias()] = $possibleValue->getValue();
+        }
 
         return $this->render('classifier/form.html.twig', [
-            'features' => $features
+            'features' => $features,
+            'possibleValues' => $possibleValues
         ]);
     }
 
