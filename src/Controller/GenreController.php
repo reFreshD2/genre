@@ -47,7 +47,7 @@ class GenreController extends AbstractController
 
         if ($request->request->has('submit')) {
             $genre->setName($request->request->get('name'));
-            $genre->setAlias($request->request->get('alias'));
+            $genre->setAlias();
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($genre);
             $entityManager->flush();
@@ -65,7 +65,7 @@ class GenreController extends AbstractController
     {
         if ($request->request->has('submit')) {
             $genre->setName($request->request->get('name'));
-            $genre->setAlias($request->request->get('alias'));
+            $genre->setAlias();
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('genre_index');

@@ -50,7 +50,7 @@ class FeatureController extends AbstractController
 
         if ($request->request->has('submit')) {
             $feature->setName($request->request->get('name'));
-            $feature->setAlias($request->request->get('alias'));
+            $feature->setAlias();
             $feature->setType($request->request->get('type'));
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -81,7 +81,7 @@ class FeatureController extends AbstractController
                 }
             }
             $feature->setName($request->request->get('name'));
-            $feature->setAlias($request->request->get('alias'));
+            $feature->setAlias();
             $feature->setType($request->request->get('type'));
 
             $this->getDoctrine()->getManager()->flush();

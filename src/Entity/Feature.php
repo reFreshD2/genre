@@ -74,9 +74,9 @@ class Feature
         return $this->alias;
     }
 
-    public function setAlias(string $alias): self
+    public function setAlias(): self
     {
-        $this->alias = $alias;
+        $this->alias = "feature_" . (new \DateTimeImmutable())->format("dmY_His");
 
         return $this;
     }
