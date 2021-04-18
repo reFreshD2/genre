@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SshConfigs">
-    <configs>
-      <sshConfig authType="PASSWORD" host="157.230.106.225" id="2370ecd6-e005-494f-b815-608834dcef02" port="22" nameFormat="DESCRIPTIVE" username="refreshjss" />
-    </configs>
-  </component>
-</project>
