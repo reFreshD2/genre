@@ -13,13 +13,15 @@
         </tr>
         </thead>
         <tbody>
-        {% for error in report %}
+        {% for errorItems in report %}
+            {% for error in errorItems %}
             <tr>
-                <td>{{ error[0] }}</td>
+                <td>{{ error.message }}</td>
                 <td>
-                    <a href="{{ error[1] }}">Решить</a>
+                    <a href="{{ error.url }}">Решить</a>
                 </td>
             </tr>
+            {% endfor %}
         {% else %}
             <tr>
                 <td colspan="3">Проблем не обнаружено</td>

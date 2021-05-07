@@ -46,9 +46,13 @@ class GenreController extends AbstractController
         $genre->setChangeAt(new \DateTime('now'));
 
         if ($request->request->has('submit')) {
-            $genre->setName($request->request->get('name'));
+            $name = $request->request->get('name');
+            $genre->setName($name);
             $genre->setAlias();
             $entityManager = $this->getDoctrine()->getManager();
+            if (count($this->genreRepository->findBy(['name' => $name])) !== 0) {
+                return $this->redirectToRoute('genre_index');
+            }
             $entityManager->persist($genre);
             $entityManager->flush();
 

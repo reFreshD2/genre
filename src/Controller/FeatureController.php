@@ -49,11 +49,16 @@ class FeatureController extends AbstractController
         $feature = new Feature();
 
         if ($request->request->has('submit')) {
-            $feature->setName($request->request->get('name'));
+            $name = $request->request->get('name');
+            $feature->setName($name);
             $feature->setAlias();
             $feature->setType($request->request->get('type'));
 
             $entityManager = $this->getDoctrine()->getManager();
+
+            if (count($this->featureRepository->findBy(['name' => $name])) !== 0) {
+                return $this->redirectToRoute('feature_index');
+            }
             $entityManager->persist($feature);
             $entityManager->flush();
 
